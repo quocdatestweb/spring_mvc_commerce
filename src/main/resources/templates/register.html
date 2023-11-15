@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<head th:replace="fragments/header.html :: header(${pageTitle})">
+</head>
+<body>
+
+
+<!-- Humberger Begin -->
+<div class="humberger__menu__overlay"></div>
+<div class="humberger__menu__wrapper">
+    <div class="humberger__menu__logo">
+        <a href="#"><img src="img/logo.png" alt=""></a>
+    </div>
+    <div class="humberger__menu__cart">
+        <ul>
+            <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
+            <li><a href="#"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
+        </ul>
+        <div class="header__cart__price">item: <span>$150.00</span></div>
+    </div>
+    <div class="humberger__menu__widget">
+        <div class="header__top__right__language">
+            <img width="35" height="25" src="img/Flag_of_Vietnam.svg.png" alt="">
+            <div>Việt Nam</div>
+            <span class="arrow_carrot-down"></span>
+            <ul>
+                <li><a href="#">Việt Nam</a></li>
+                <li><a href="#">English</a></li>
+            </ul>
+        </div>
+        <div class="header__top__right__auth">
+            <a href="/login">
+                <i class="fa fa-user"></i> Đăng nhập
+            </a>
+        </div>
+        <div class="header__top__right__auth">
+            <a href="#">
+                <i class="fa fa-user"></i> Đăng ký
+            </a>
+        </div>
+    </div>
+    <nav class="humberger__menu__nav mobile-menu">
+        <ul>
+            <li class="active"><a href="./index.html">Home</a></li>
+            <li><a href="./shop-grid.html">Shop</a></li>
+            <li><a href="#">Pages</a>
+                <ul class="header__menu__dropdown">
+                    <li><a href="./product_detail.html">Shop Details</a></li>
+                    <li><a href="./cart.html">Shoping Cart</a></li>
+                    <li><a href="./checkout.html">Check Out</a></li>
+                    <li><a href="./blog-details.html">Blog Details</a></li>
+                </ul>
+            </li>
+            <li><a href="./blog.html">Blog</a></li>
+            <li><a href="./contact.html">Contact</a></li>
+        </ul>
+    </nav>
+    </nav>
+    <div id="mobile-menu-wrap"></div>
+
+    <div class="humberger__menu__contact">
+        <ul>
+            <li><i class="fa fa-envelope"></i> buidoanminhquan@gmail.com</li>
+            <li>Miễn phí vận chuyển cho đơn từ 500 ngàn.</li>
+        </ul>
+    </div>
+</div>
+
+<header th:replace="fragments/head.html :: head()">
+</header>
+<section class="hero">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="hero__categories">
+                    <div class="hero__categories__all">
+                        <i class="fa fa-bars"></i>
+                        <span>Tất cả thể loại</span>
+                    </div>
+                    <ul id="productTableBody">
+
+                    </ul>
+
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div class="hero__item set-bg border" >
+                    <div class="hero__text">
+                        <span>ĐĂNG KÝ NGAY</span>
+                            <form th:object="${user}" th:action="@{/register}" method="post">
+                                <div class="row">
+                                    <div class="col-sm">
+                                        <div class="form-group">
+                                            <label for="firstName" class="form-label">Tên</label>
+                                            <input th:field="*{firstName}" type="text" class="form-control" id="firstName"
+                                                   placeholder="First name" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm">
+                                        <label for="lastName" class="form-label">Họ</label>
+                                        <input th:field="*{lastName}" type="text" class="form-control" id="lastName"
+                                               placeholder="Last name" required>
+                                    </div>
+                                    <div class="col-sm">
+                                        <label for="address" class="form-label">Địa chỉ</label>
+                                        <input th:field="*{address}" type="text" class="form-control" id="address"
+                                               placeholder="Address" required>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm">
+                                        <label for="phone" class="form-label">Số điện thoại</label>
+                                        <input th:field="*{phone}" type="text" class="form-control" id="phone"
+                                               placeholder="Phone" required>
+                                    </div>
+                                    <div class="col-sm">
+                                        <label for="userName" class="form-label">Tên đăng nhập</label>
+                                        <input th:field="*{userName}" type="text" class="form-control" id="userName"
+                                               placeholder="Username" required>
+                                    </div>
+                                    <div class="col-sm">
+                                        <label for="password" class="form-label">Mật khẩu</label>
+                                        <input th:field="*{password}" type="password" class="form-control" id="password"
+                                               placeholder="Password" required minlength="8">
+                                    </div>
+                                </div>
+                                <br class="mt-4">
+
+                                <button type="submit" class="btn btn-success">Đăng ký</button>
+                            </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+<script>
+    $(document).ready(function() {
+        $.getJSON("/api/category", function(products) {
+            var tableBody = $("#productTableBody");
+            var uniqueCategories = [];
+
+            $.each(products, function(index, product) {
+                var category = product.category;
+                if (!uniqueCategories.includes(category)) {
+                    uniqueCategories.push(category);
+                    var row = "<li><a>" + category + "</a></li>";
+                    tableBody.append(row);
+                }
+            });
+        });
+    });
+</script>
+
+<footer th:replace="fragments/footer.html :: footer()">
+</footer>
+
+</body>
+
+</html>

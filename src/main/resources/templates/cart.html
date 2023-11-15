@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/header.html :: header(${pageTitle})">
+
+
+    <header>
+        <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css'>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+              integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+              crossorigin="anonymous" referrerpolicy="no-referrer" />
+    </header>
+
+<body>
+<header th:replace="fragments/head.html :: head()">
+</header>
+<section class="hero">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="hero__categories">
+                    <div class="hero__categories__all">
+                        <i class="fa fa-bars"></i>
+                        <span>Tất cả thể loại</span>
+                    </div>
+                    <ul id="productTableBody" style="display: none;">
+
+                    </ul>
+
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div class="hero__search">
+                    <div class="hero__search__form">
+                        <form th:action="@{/products}">
+                            <input  name="keyword" type="text" th:value="${keyword}" placeholder="Bạn cần tìm gì?" required>
+                            <button type="submit" class="site-btn">Tìm kiếm</button>
+                        </form>
+                    </div>
+                    <div class="hero__search__phone">
+                        <div class="hero__search__phone__icon">
+                            <i class="fa fa-phone"></i>
+                        </div>
+                        <div class="hero__search__phone__text">
+                            <h5>+8491228445</h5>
+                            <span>Hỗ trợ 24/7 </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="shoping-cart spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="shoping__cart__table">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th class="shoping__product">Sản phẩm</th>
+                            <th>Giá</th>
+                            <th>Số lượng</th>
+                            <th>Tổng cộng</th>
+                            <th>Xóa</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr th:each="cart : ${carts}">
+                            <td class="shoping__cart__item">
+                                <img style="width: 100px; height: auto;" th:src="${cart.image != null ? cart.image : 'https://placehold.co/35x35/png'}">
+                                <h5>[[${cart.productName}]]</h5>
+                            </td>
+                            <td >
+                                [[${cart.productPrice}]]
+                            </td>
+                            <td class="shoping__cart__quantity">
+                                [[${cart.quantity}]]
+                            </td>
+                            <td>
+                                [[${cart.quantity * cart.productPrice}]]
+                            </td>
+                            <td class="shoping__cart__item__close">
+                                <input id="cartIdInput" type="hidden" th:value="${cart.id}">
+                                <a  id="deleteButton" class="btn"><i class="fa fa-trash text-danger"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="shoping__checkout">
+                    <ul>
+                        <li>Họ tên <span>[[${currentUser.lastName + ' ' + currentUser.firstName}]]</span></li>
+                        <li>Địa chỉ<span>[[${currentUser.address}]]</span></li>
+                        <li>SĐT <span> [[${currentUser.phone}]]</span></li>
+                        <li>Phương thức thanh toán <span> Thanh toán khi nhận hàng</span></li>
+
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="shoping__checkout">
+                    <ul>
+                        <li>Tạm tính <span>[[${subTotalPrice}]] vnđ </span></li>
+                        <li th:if="${subTotalPrice} != 0"> Phí vận chuyển
+                        <span>20.000 vnđ </span>
+                        </li>
+                        <li th:if="${subTotalPrice} == 0"> Phí vận chuyển
+                            <span>0.000 vnđ </span>
+                        </li>
+                        <li th:if="${subTotalPrice} == 0"> Thành tiền
+                            <span>0.000 vnđ </span>
+                        </li>
+                        <li th:if="${subTotalPrice} != 0"> Thành tiền
+                            <span>[[${totalPrice}]] vnđ</span>
+                        </li>
+
+                    <form th:action="@{/checkout}" method="post">
+                        <button  type="submit" class="btn text-white" style="border-color: #007bff; background-color: #007bff;">CHECK OUT</button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- footer -->
+<footer th:replace="fragments/footer.html :: footer()">
+</footer>
+</div>
+
+<!-- script -->
+<script type="text/javascript">
+    function clearSearch() {
+        window.location = "[[@{/products}]]";
+    }
+</script>
+<script>
+    $(document).ready(function() {
+        $.getJSON("/api/category", function(products) {
+            var tableBody = $("#productTableBody");
+            var uniqueCategories = [];
+
+            $.each(products, function(index, product) {
+                var category = product.category;
+                if (!uniqueCategories.includes(category)) {
+                    uniqueCategories.push(category);
+                    var row = "<li><a>" + category + "</a></li>";
+                    tableBody.append(row);
+                }
+            });
+        });
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $("#clearRowsButton").click(function() {
+            $("tr").empty(); // Clears the content of each <tr> tag
+        });
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $('#deleteButton').click(function() {
+            const cartId = document.getElementById("cartIdInput").value;
+            const url = `/api/deletecart/${cartId}`;
+
+            fetch(url, {
+                method: "DELETE",
+            })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.reload();
+                    } else {
+                        alert("Error deleting cart: " + response.status);
+                    }
+                })
+                .catch(error => {
+                    alert("Error deleting cart: " + error);
+                });
+
+
+        });
+    });
+</script>
+
+</body>
+
+</html>

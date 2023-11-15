@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/header.html :: header(${pageTitle})">
+
+
+  <header>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+  </header>
+
+<body>
+<header th:replace="fragments/head.html :: head()">
+</header>
+<section class="hero">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-3">
+        <div class="hero__categories">
+          <div class="hero__categories__all">
+            <i class="fa fa-bars"></i>
+            <span>Tất cả thể loại</span>
+          </div>
+          <ul id="productTableBody">
+
+          </ul>
+
+        </div>
+      </div>
+      <div class="col-lg-9">
+        <div class="hero__search">
+          <div class="hero__search__form">
+            <form th:action="@{/products}">
+              <input  name="keyword" type="text" th:value="${keyword}" placeholder="Bạn cần tìm gì?" required>
+              <button type="submit" class="site-btn">Tìm kiếm</button>
+            </form>
+          </div>
+          <div class="hero__search__phone">
+            <div class="hero__search__phone__icon">
+              <i class="fa fa-phone"></i>
+            </div>
+            <div class="hero__search__phone__text">
+              <h5>+8491228445</h5>
+              <span>Hỗ trợ 24/7 </span>
+            </div>
+          </div>
+        </div>
+        <div class="hero__item set-bg" th:data-setbg="@{/img/hero/banner.jpg}" style="background-image: url('/img/hero/banner.jpg');">          <div class="hero__text">
+          <div class="hero__text">
+            <form th:action="@{/users/save}" method="post" th:object="${user}" >
+
+                <!-- userName -->
+                <div class="form-group row my-2">
+                  <label class="col-sm-4 col-form-label">Username:</label>
+                  <div class="col-sm-8">
+                    <input type="text" th:field="*{userName}" class="form-control" required minlength="2" maxlength="45" />
+                  </div>
+                </div>
+                <!-- first Name -->
+                <div class="form-group row my-2">
+                  <label class="col-sm-4 col-form-label">Tên:</label>
+                  <div class="col-sm-8">
+                    <input type="text" th:field="*{firstName}" class="form-control" required minlength="2" maxlength="45" />
+                  </div>
+                </div>
+                <!-- last Name -->
+                <div class="form-group row my-2">
+                  <label class="col-sm-4 col-form-label">Họ tên:</label>
+                  <div class="col-sm-8">
+                    <input type="text" th:field="*{lastName}" class="form-control" required minlength="2" maxlength="45" />
+                  </div>
+                </div>
+                <!-- address -->
+                <div class="form-group row my-2">
+                  <label class="col-sm-4 col-form-label">Địa chỉ:</label>
+                  <div class="col-sm-8">
+                    <input type="text" th:field="*{address}" class="form-control" required minlength="2" maxlength="45" />
+                  </div>
+                </div>
+                <div class="form-group row my-2">
+                  <label class="col-sm-4 col-form-label">Vai trò</label>
+                  <div class=" form-group col-sm-8" >
+                    <select class="form-control" id="myEnum" name="role" th:field="*{role}">
+                      <option value="ADMIN" th:selected="${user.role == T(com.example.springcommerce.emun.Role).ADMIN}">
+                        ADMIN
+                      </option>
+                      <option value="USER" th:selected="${user.role == T(com.example.springcommerce.emun.Role).USER}">
+                        USER
+                      </option>
+                    </select>
+                  </div>
+              <!-- role -->
+                </div>
+                <!-- phone -->
+                <div class="form-group row my-2">
+                  <label class="col-sm-4 col-form-label">SĐT:</label>
+                  <div class="col-sm-8">
+                    <input type="text" th:field="*{phone}" class="form-control" required minlength="2" maxlength="45" />
+                  </div>
+                </div>
+                <!-- password -->
+                <div class="form-group row my-2">
+                  <label class="col-sm-4 col-form-label">Mật khẩu:</label>
+                  <div class="col-sm-8">
+                    <input type="password" th:field="*{password}" class="form-control" required minlength="5" maxlength="15" />
+                  </div>
+                </div>
+                <!-- active -->
+                <div class="form-group row my-2">
+                  <label class="col-sm-4 col-form-label">Kích hoạt:</label>
+                  <div class="col-sm-8">
+                    <input type="checkbox" th:field="*{active}" />
+                  </div>
+                </div>
+
+                <!-- handler -->
+                <div class="text-center">
+                  <button type="submit" class="btn btn-success">Lưu</button>
+                  <button type="button" class="btn btn-secondary" onclick="cancelForm()">Hủy</button>
+                </div>
+
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer th:replace="fragments/footer.html :: footer()">
+</footer>
+<script type="text/javascript">
+  function cancelForm() {
+    window.location = "[[@{/users}]]";
+  }
+</script>
+<script>
+  $(document).ready(function() {
+    $.getJSON("/api/category", function(products) {
+      var tableBody = $("#productTableBody");
+      var uniqueCategories = [];
+
+      $.each(products, function(index, product) {
+        var category = product.category;
+        if (!uniqueCategories.includes(category)) {
+          uniqueCategories.push(category);
+          var row = "<li><a>" + category + "</a></li>";
+          tableBody.append(row);
+        }
+      });
+    });
+  });
+</script>
+</body>
+
+</html>

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/header.html :: header(${pageTitle})">
+
+
+<header>
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css'>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+</header>
+
+<body>
+<header th:replace="fragments/head.html :: head()">
+</header>
+<section class="hero">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-3">
+        <div class="hero__categories">
+          <div class="hero__categories__all">
+            <i class="fa fa-bars"></i>
+            <span>Tất cả thể loại</span>
+          </div>
+          <ul id="productTableBody">
+
+          </ul>
+
+        </div>
+      </div>
+      <div class="col-lg-9">
+        <div class="hero__search">
+          <div class="hero__search__form">
+            <form th:action="@{/products}">
+              <input  name="keyword" type="text" th:value="${keyword}" placeholder="Bạn cần tìm gì?" required>
+              <button type="submit" class="site-btn">Tìm kiếm</button>
+            </form>
+          </div>
+          <div class="hero__search__phone">
+            <div class="hero__search__phone__icon">
+              <i class="fa fa-phone"></i>
+            </div>
+            <div class="hero__search__phone__text">
+              <h5>+8491228445</h5>
+              <span>Hỗ trợ 24/7 </span>
+            </div>
+          </div>
+        </div>
+        <div class="hero__item set-bg" data-setbg="img/hero/banner.jpg" style="background-image: url(&quot;img/hero/banner.jpg&quot;);">
+          <div class="hero__text">
+            <span>Black Friday 2023 sắp trở lại</span>
+            <h3>Chính sách đổi trả <br> bảo hành tốt nhất</h3>
+            <p>Nhận và giao hàng miễn phí</p>
+            <a href="#" class="primary-btn">MUA NGAY</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+
+<!-- Table for admin -->
+<section class="featured spad" th:if="${isAdmin}">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="section-title" >
+          <h2 >Quản lý sản phẩm</h2>
+          <a class="primary-btn" th:href="@{/products/new}">
+            Thêm sản phẩm
+          </a>
+        </div>
+        <div th:if="${message}" class="alert alert-success text-center">
+          [[${message}]]
+        </div>
+        <div class="featured__controls">
+          <ul>
+            <li th:replace="fragments/filter :: filter('category','Thể loại')"></li>
+            <li th:replace="fragments/filter :: filter('name','Sản phẩm')"></li>
+            <li th:replace="fragments/filter :: filter('price','Giá cả')"></li>
+            <li th:replace="fragments/filter :: filter('brand','Thương hiệu')"></li>
+            <li th:replace="fragments/filter :: filter('color','Màu sắc')"></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div th:if="${isAdmin}" class="row featured__filter" id="MixItUp4159FE">
+      <th:block th:each="product : ${paginatedProductResponse.products}">
+        <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
+          <div class="featured__item">
+            <div class="featured__item__pic set-bg" th:data-setbg="${product.image}" style="background-image: url('${product.image}'); background-repeat: no-repeat; background-position: center; background-size: cover;box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);">
+              <ul class="featured__item__pic__hover">
+                <li><a  th:href="@{'/products/edit/' + ${product.id}}"><i class="fa-solid fa-pen-to-square"></i></a></li>
+                <li><a th:href="@{'/products/delete/' + ${product.id}}"><i class="fa-solid fa-trash"></i></a></li>
+                <li><a th:href="@{'/products/' + ${product.id}}"><i class="fa-solid fa-eye"></i></a></li>
+              </ul>
+            </div>
+            <div class="featured__item__text">
+              <h6><a th:href="@{/products/} + ${product.id}">[[${product.name}]]</a></h6>
+              <h6><a>[[${product.category}]] - [[${product.color}]]</a></h6>
+              <h5 id="myInput">[[${product.price}]]</h5>
+            </div>
+          </div>
+        </div>
+      </th:block>
+    </div>
+  </div>
+</section>
+
+<!--Table for user-->
+<section class="featured spad" th:if="${!isAdmin}">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="section-title" >
+          <h2 >Sản phẩm đặc trưng</h2>
+        </div>
+        <div class="featured__controls">
+          <ul>
+            <li th:replace="fragments/filter :: filter('category','Thể loại')"></li>
+            <li th:replace="fragments/filter :: filter('name','Sản phẩm')"></li>
+            <li th:replace="fragments/filter :: filter('price','Giá cả')"></li>
+            <li th:replace="fragments/filter :: filter('brand','Thương hiệu')"></li>
+            <li th:replace="fragments/filter :: filter('color','Màu sắc')"></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div th:if="${!isAdmin}" class="row featured__filter" id="MixItUp4159FE">
+      <th:block th:each="product : ${paginatedProductResponse.products}">
+      <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
+        <div class="featured__item">
+          <div class="featured__item__pic set-bg" th:data-setbg="${product.image}" style="background-image: url('${product.image}'); background-repeat: no-repeat; background-position: center; background-size: cover;box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);">
+            <ul class="featured__item__pic__hover">
+              <li><a th:href="@{/products/} + ${product.id}"><i class="fa fa-shopping-cart"></i></a></li>
+            </ul>
+          </div>
+          <div class="featured__item__text">
+            <h6><a th:href="@{/products/} + ${product.id}">[[${product.name}]]</a></h6>
+            <h6><a>[[${product.category}]] - [[${product.color}]]</a></h6>
+            <h5 id="myInput">[[${product.price}]]</h5>
+          </div>
+        </div>
+      </div>
+      </th:block>
+    </div>
+  </div>
+</section>
+
+
+<div class="container">
+  <!-- current/total -->
+  <div class="row">
+    <div class="col">
+      <div class="success text-center">
+        Showing
+        <b th:text="${currentNumberProduct}"></b>
+        out of
+        <b th:text="${paginatedProductResponse.getNumberOfItems()}"></b>
+        products.
+      </div>
+    </div>
+  </div>
+  <!-- paging -->
+  <div class="row">
+    <div class="col">
+      <ul class="pagination justify-content-center">
+        <li class="page-item" th:classappend="${currentPage==0} ? disabled">
+          <a class="page-link" th:href="@{/products(keyword=${keyword}, currentPage=${currentPage-1})}">&laquo;</a>
+        </li>
+
+        <li th:each="pageNumber : ${pageNumbers}" class="page-item"
+            th:classappend="${pageNumber==currentPage + 1} ? active">
+          <a class="page-link" th:href="@{/products(keyword=${keyword}, currentPage=${pageNumber - 1})}"
+             th:text="${pageNumber}"></a>
+        </li>
+
+        <li class="page-item"
+            th:classappend="${currentPage==paginatedProductResponse.getNumberOfPages() - 1} ? disabled">
+          <a class="page-link" th:href="@{/products(keyword=${keyword}, currentPage=${currentPage+1})}">&raquo;</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- footer -->
+  <footer th:replace="fragments/footer.html :: footer()">
+  </footer>
+</div>
+
+<!-- script -->
+<script type="text/javascript">
+  function clearSearch() {
+    window.location = "[[@{/products}]]";
+  }
+</script>
+<script>
+  $(document).ready(function() {
+    $.getJSON("/api/category", function(products) {
+      var tableBody = $("#productTableBody");
+      var uniqueCategories = [];
+
+      $.each(products, function(index, product) {
+        var category = product.category;
+        if (!uniqueCategories.includes(category)) {
+          uniqueCategories.push(category);
+          var row = "<li><a>" + category + "</a></li>";
+          tableBody.append(row);
+        }
+      });
+    });
+  });
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/header.html :: header(${pageTitle})">
+
+
+    <header>
+        <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css'>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+              integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+              crossorigin="anonymous" referrerpolicy="no-referrer" />
+    </header>
+
+<body>
+<header th:replace="fragments/head.html :: head()">
+</header>
+<section class="hero">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="hero__categories">
+                    <div class="hero__categories__all">
+                        <i class="fa fa-bars"></i>
+                        <span>Tất cả thể loại</span>
+                    </div>
+                    <ul id="productTableBody" style="display: none;">
+
+                    </ul>
+
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div class="hero__search">
+                    <div class="hero__search__form">
+                        <form th:action="@{/products}">
+                            <input  name="keyword" type="text" th:value="${keyword}" placeholder="Bạn cần tìm gì?" required>
+                            <button type="submit" class="site-btn">Tìm kiếm</button>
+                        </form>
+                    </div>
+                    <div class="hero__search__phone">
+                        <div class="hero__search__phone__icon">
+                            <i class="fa fa-phone"></i>
+                        </div>
+                        <div class="hero__search__phone__text">
+                            <h5>+8491228445</h5>
+                            <span>Hỗ trợ 24/7 </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <div class="row justify-content-center text-center my-2">
+        <div class="col-md-8 col-lg-6">
+            <div class="header">
+                <h2>Lịch sử giao dịch</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <div th:if="${isAdmin}" class="container">
+        <table class="w-100 table table-bordered table-hover">
+            <thead style="background-color: #7fad39; color: #FFFFFF;">
+                <tr>
+                    <th>STT</th>
+                    <th>Ngày đặt hàng</th>
+                    <th>Họ tên</th>
+                    <th>Số điện thoại</th>
+                    <th>Địa chỉ</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                <th:block th:each="order : ${allOrders}">
+                    <tr>
+                        <td>[[${order.id}]]</td>
+                        <td>[[${order.orderDate}]]</td>
+                        <td>[[${order.fullName}]]</td>
+                        <td>[[${order.phone}]]</td>
+                        <td>[[${order.address}]]</td>
+                        <td class="text-center">
+                            <a class="h4 text-decoration-nonetext text-danger" th:href="@{'/orders/delete/' + ${order.id}}">
+                                <i class="fa-solid fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </th:block>
+
+            </tbody>
+        </table>
+
+    </div>
+
+
+
+    <div th:if="${isAdmin == false}" class="container">
+        <div class="container py-5 ">
+            <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Tổng hóa đơn:
+                    <span class="badge bg-danger rounded-pill text-white">[[${orders?.size()}]]</span>
+                </li>
+            </ul>
+
+            <div th:each="order : ${orders}" class="row d-flex justify-content-center align-items-center my-3">
+                <div class="col-12">
+                    <div class="card card-stepper text-black" style="border-radius: 16px;">
+                        <div class="card-body p-5">
+                            <div class="d-flex justify-content-between align-items-center mb-5">
+                                <div>
+                                    <h5 class="mb-0">Mã hóa đơn
+                                        <span class="text-primary font-weight-bold">
+                                            #[[${order?.orderId}]]
+                                        </span>
+                                    </h5>
+                                </div>
+                                <div class="text-end">
+                                    <p class="mb-0">Ngày order:
+                                        <span>
+                                            [[${order?.orderDate}]]
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <ul class="list-group list-group-flush">
+                            <li th:each="product, idx :${order?.products}" class="list-group-item">
+                                <div class="row">
+                                    <div class="col-4">
+                                        <img class="border" th:src="${product.image}" alt="" srcset="" width="50px" height="50px"> [[${product.name}]]
+                                    </div>
+                                    <div class="col-5">Số lượng: [[${order?.orderDetails?.get(idx.index)?.quanity}]]
+                                    </div>
+                                    <div class="col-3">Giá: [[${product?.price}]]
+                                        VND
+                                    </div>
+
+                                </div>
+                            </li>
+                        </ul>
+
+                        <div class="card-footer text-muted">
+                            <div class="row">
+                                <div class="col-9">
+                                    <i class="fa-solid fa-truck-fast"></i>
+                                    Đơn đặt hàng của bạn hiện đang được vận chuyển và được lên lịch giao hàng nhanh chóng.                                </div>
+                                <div class="col-3">Tổng đơn hàng: [[${order?.total}]] VND</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+<footer th:replace="fragments/footer.html :: footer()">
+</footer>
+<script>
+    $(document).ready(function() {
+        $.getJSON("/api/category", function(products) {
+            var tableBody = $("#productTableBody");
+            var uniqueCategories = [];
+
+            $.each(products, function(index, product) {
+                var category = product.category;
+                if (!uniqueCategories.includes(category)) {
+                    uniqueCategories.push(category);
+                    var row = "<li><a>" + category + "</a></li>";
+                    tableBody.append(row);
+                }
+            });
+        });
+    });
+</script>
+</body>
+
+</html>
