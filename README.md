@@ -67,7 +67,7 @@ A small start-up named "SpringCommerce" wants to build a very simple online shop
   5. Download and enable the `Spring Boot Extension Pack` extension in vscode. The extension can be downloaded from https://marketplace.visualstudio.com/items?itemName=vmware.vscode-boot-dev-pack.
   6. Download and enable the `Extension Pack for Java extension` in vscode. The extension can be downloaded from https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-pack.
   7. Clone the `source code` from https://github.com/quocdatestweb/spring_mvc_commerce.git and open it in vscode.
-  8. Set up database with XAMPP
+  8. Set up Websever and database with XAMPP
   9. Press `ctrl + shift + p` in vscode and enter `Spring Boot Dashboard:run...`. The application should now be running.
 
   - [x] Full CURL commands or Postman snapshots to verify the APIs (include full request endpoints, HTTP Headers and request payload if any).
