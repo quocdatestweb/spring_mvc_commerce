@@ -1,14 +1,3 @@
-# SpringCommerce
-
-## Problem statement
-A small start-up named "SpringCommerce" wants to build a very simple online shopping application to sell their products. In order to get to the market quickly, they just want to build an MVP (Minimum Viable Product) version with a very limited set of functionalities:
-
-
-## Requirement
-
-[click here to detail](/REQUIREMENT.md)
-
-
 ## SOlUTION
   - [x] Entity-relationship diagram 
     - ![Diagram db](src/main/resources/static/img/diagram.png)
