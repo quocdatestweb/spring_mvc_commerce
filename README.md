@@ -1,6 +1,8 @@
 ## SOlUTION
   - [x] Entity-relationship diagram 
     - ![Diagram db](src/main/resources/static/img/diagram.png)
+  - [x] Class diagram 
+    - ![Diagram db](src/main/resources/static/img/class_diagram.png)
 
 
 
