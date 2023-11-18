@@ -100,9 +100,3 @@
   - ![](src/main/resources/static/img/web_result/history.png)
   - ![](src/main/resources/static/img/web_result/addnewproducts.png)
   - ![](src/main/resources/static/img/web_result/addnewuser.png)
-
-
-
-
-
-## Video Demo
